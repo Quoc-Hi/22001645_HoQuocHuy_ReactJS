@@ -1,0 +1,23 @@
+.alert {
+  padding: 12px 20px;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+/* SUCCESS */
+.alert-success {
+  background-color: #198754;
+}
+
+/* WARNING */
+.alert-warning {
+  background-color: #ffc107;
+  color: #000;
+}
+
+/* ERROR */
+.alert-error {
+  background-color: #dc3545;
+}
