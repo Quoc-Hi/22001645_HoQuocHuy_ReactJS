@@ -4,54 +4,60 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [userId, setUserId] = useState("");
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        setLoading(true);
+    if (!userId) return;
 
-        const response = await fetch(
-          "https://jsonplaceholder.typicode.com/users"
+    // validate id
+    if (userId < 1 || userId > 10) {
+      setError("User not found");
+      setUser(null);
+      return;
+    }
+
+    const fetchUser = async () => {
+      try {
+        setError("");
+
+        const res = await fetch(
+          `https://jsonplaceholder.typicode.com/users/${userId}`
         );
 
-        if (!response.ok) {
-          throw new Error("API Error");
-        }
-        const data = await response.json();
-        setUsers(data);
+        const data = await res.json();
+        setUser(data);
       } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+        setError("Failed to fetch user");
       }
     };
 
-    fetchUsers();
-  },[]);
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
+    fetchUser();
+  }, [userId]); // chạy lại khi userId thay đổi
 
   return (
     <div>
-      <h2>Danh sách Users</h2>
+      <h2>Search User</h2>
 
-      {users.map((user) => (
-        <div key={user.id}>
+      <input
+        type="number"
+        placeholder="Enter userId (1-10)"
+        value={userId}
+        onChange={(e) => setUserId(e.target.value)}
+      />
+
+      {error && <p>{error}</p>}
+
+      {user && !error && (
+        <div>
           <p><b>Name:</b> {user.name}</p>
-          <p><b>Email:</b> {user.email}</p>
+          <p><b>Phone:</b> {user.phone}</p>
+          <p><b>Website:</b> {user.website}</p>
         </div>
-      ))}
+      )}
     </div>
-  )
+  );
 }
 
 export default App
